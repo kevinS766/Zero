@@ -9,13 +9,13 @@
 
 ## Safeguards and Working Boundaries (CRITICAL)
 
-### 1. Flujo de Trabajo en Roblox Studio (Team Create / En Línea)
-- **Sin Rojo**: El proyecto ya no depende de Rojo ni sincronización de archivos locales a disco. Todo el código, instancias y servicios residen y se editan directamente en la sesión en línea de Roblox Studio (`Lugar de KaiBit23: 10072026_1`).
-- **Edición y Control**: Usamos las herramientas directas de Roblox Studio MCP (`script_read`, `script_search`, `multi_edit`, `execute_luau`, etc.) para leer, modificar e inspeccionar scripts en tiempo real en la nube/Team Create.
+### 1. Flujo de Trabajo y Código Fuente (src/ y Roblox Studio)
+- **Código Fuente en el Repositorio (`src/`)**: Todo el código fuente de los scripts del juego reside en texto plano bajo el directorio `src/` (`src/server/`, `src/client/`, `src/shared/`, etc.), versionado en Git y subido a GitHub.
+- **Edición y Sincronización**: En el día a día, el código puede editarse directamente en la sesión de Roblox Studio (`Lugar de KaiBit23: 10072026_1`) mediante herramientas MCP o en local. La skill `sync-game-repo` permite exportar y sincronizar bidireccionalmente los scripts entre Studio y el repositorio.
 - **Zonas y Responsabilidades**:
-  - `ServerScriptService.Server` (Servicios del servidor: combate, estados, rondas, bots, datos, etc.).
-  - `ReplicatedStorage.Shared` (Configuración, constantes y eventos de red).
-  - `StarterPlayer.StarterPlayerScripts.Client` (Controladores de cliente).
+  - `ServerScriptService.Server` -> `src/server/` (Servicios del servidor: combate, estados, rondas, bots, datos, economía, etc.).
+  - `ReplicatedStorage.Shared` -> `src/shared/` (Configuración, constantes y eventos de red).
+  - `StarterPlayer.StarterPlayerScripts` -> `src/client/` (Controladores de cliente, HUD, animaciones, VFX).
 - **Golden Integration Rule**:
   - Respetar los assets, interfaces y modelos administrados por KaiBit23 (`Workspace`, `ZeroUI`, `ZeroAnimations`, `ZeroAudio`, `ZeroSoundAssets`, etc.).
   - Si un asset falta o no ha sido importado aún, nuestros scripts usan un fallback silencioso sin romper la ejecución.
@@ -109,8 +109,8 @@
 ## Directory Conventions
 
 ### Source Storage & Team Create Workflow
-
-> **Aviso de Migración**: El directorio local `src/` y `default.project.json` han sido eliminados del repositorio. Todo el código, configuración y arquitectura viven exclusivamente dentro del DataModel de Roblox Studio en la sesión de Team Create. No existen copias locales ni sincronizaciones con Rojo.
+- **Código Fuente (`src/`)**: Todos los scripts de Luau están exportados en texto plano bajo `src/` (`src/server`, `src/client`, `src/shared`, `src/startergui`, etc.) y sincronizados con GitHub.
+- **Sincronización**: Gestionada mediante la skill `.agents/skills/sync-game-repo` y `tools/sync_server.py`.
 
 ### DataModel Structure & Responsibilities
 
