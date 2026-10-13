@@ -1,0 +1,27 @@
+# Roblox Studio binary & lock files
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+sourcemap.json
+
+# Heavy binary documents and external asset dumps
+*.docx
+*.pdf
+tempICONS/
+raw_assets/
+docs/archive/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.swp
+*.bak
+
+# Environment and secrets
+.env
+.env.*
+*.token
+*.log
