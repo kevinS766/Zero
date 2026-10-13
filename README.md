@@ -1,20 +1,20 @@
-# Zero (Por debajo de cero) ❄️🏃‍♂️🗡️
+# Zero (Por debajo de cero)
 
 Zero es un juego multijugador rápido y competitivo en Roblox con temática de supervivencia y congelamiento (Hunter vs Runner / Freeze Tag).
 
 ---
 
-## 🎮 Modos y Roles
+## Modos y Roles
 
-* **🏃‍♂️ Corredores (Runners)**: Deben huir del cazador, utilizar la habilidad de desplazamiento (*Dash*), salvar a sus compañeros congelados con interacción por proximidad y sobrevivir hasta que expire el tiempo de la ronda.
-* **🗡️ Cazador (Hunter)**: Debe congelar a todos los corredores antes de que se agote el tiempo utilizando su cuchillo, agilidad y habilidades únicas de clase.
+* **Corredores (Runners)**: Deben huir del cazador, utilizar la habilidad de desplazamiento (*Dash*), salvar a sus compañeros congelados con interacción por proximidad y sobrevivir hasta que se agote el tiempo.
+* **Cazador (Hunter)**: Debe congelar a todos los corredores antes de que se agote el tiempo utilizando su cuchillo, agilidad y habilidades únicas de clase.
   * **Rastreador (Tracker)**: Revela las siluetas de los corredores cercanos a través de obstáculos.
   * **Acechador (Stalker)**: Invisibilidad temporal y aumento de velocidad de desplazamiento.
   * **Trampero (Trapper)**: Coloca trampas en el suelo que congelan a los corredores que las pisen.
 
 ---
 
-## 🏛️ Arquitectura del Proyecto
+## Arquitectura del Proyecto
 
 El código está completamente estructurado y modularizado:
 
@@ -46,7 +46,7 @@ Zero/
 
 ---
 
-## 🔄 Sincronización desde Roblox Studio a Git
+## Sincronización desde Roblox Studio a Git
 
 Para mantener el repositorio de GitHub actualizado con los cambios que se hagan en Studio:
 
@@ -99,7 +99,7 @@ Para mantener el repositorio de GitHub actualizado con los cambios que se hagan 
 
 ---
 
-## 👥 Equipo y Créditos
+## Equipo y Créditos
 
 * **Polaris**: Lógica de servidor, arquitectura técnica, networking, máquinas de estado y servicios modulares.
 * **KaiBit23**: Construcción de mapas, iluminación, props 3D, animaciones de personajes, VFX, audio y diseño visual de interfaz.
