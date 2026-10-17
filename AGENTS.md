@@ -2,20 +2,20 @@
 
 > **Context**: Zero is a fast-paced multiplayer Roblox game (Hunter vs Runner / Freeze Tag).
 > **Team Division**:
-> - **Polaris (You + Antigravity)**: Server logic, technical architecture, networking, state machines, and modular services managed via Rojo.
+> - **Polaris (You + Antigravity)**: Server logic, technical architecture, networking, state machines, and modular services managed directly via Roblox Studio MCP / Team Create.
 > - **KaiBit23 (Studio / MCP)**: Maps, lighting, 3D props, character animations, VFX, audio, and visual interface designs directly inside Roblox Studio.
 
 ---
 
 ## Safeguards and Working Boundaries (CRITICAL)
 
-### 1. Flujo de Trabajo y Código Fuente (src/ y Roblox Studio)
-- **Código Fuente en el Repositorio (`src/`)**: Todo el código fuente de los scripts del juego reside en texto plano bajo el directorio `src/` (`src/server/`, `src/client/`, `src/shared/`, etc.), versionado en Git y subido a GitHub.
-- **Edición y Sincronización**: En el día a día, el código puede editarse directamente en la sesión de Roblox Studio (`Lugar de KaiBit23: 10072026_1`) mediante herramientas MCP o en local. La skill `sync-game-repo` permite exportar y sincronizar bidireccionalmente los scripts entre Studio y el repositorio.
+### 1. Flujo de Trabajo en Roblox Studio (Team Create / MCP)
+- **Código Centralizado en Roblox Studio**: Todo el código, servicios e instancias residen y se gestionan 100% en la sesión activa de Roblox Studio (`Lugar de KaiBit23: 10072026_1`) mediante las herramientas MCP de Studio (`script_read`, `script_search`, `multi_edit`, `execute_luau`, etc.).
+- **Sin Rojo ni GitHub**: Se eliminó la carpeta local `src/` y ya no se realiza sincronización ni versionado con Rojo ni GitHub.
 - **Zonas y Responsabilidades**:
-  - `ServerScriptService.Server` -> `src/server/` (Servicios del servidor: combate, estados, rondas, bots, datos, economía, etc.).
-  - `ReplicatedStorage.Shared` -> `src/shared/` (Configuración, constantes y eventos de red).
-  - `StarterPlayer.StarterPlayerScripts` -> `src/client/` (Controladores de cliente, HUD, animaciones, VFX).
+  - `ServerScriptService.Server` (Servicios del servidor: combate, estados, rondas, bots, datos, economía, etc.).
+  - `ReplicatedStorage.Shared` (Configuración, constantes y eventos de red).
+  - `StarterPlayer.StarterPlayerScripts` (Controladores de cliente, HUD, animaciones, VFX).
 - **Golden Integration Rule**:
   - Respetar los assets, interfaces y modelos administrados por KaiBit23 (`Workspace`, `ZeroUI`, `ZeroAnimations`, `ZeroAudio`, `ZeroSoundAssets`, etc.).
   - Si un asset falta o no ha sido importado aún, nuestros scripts usan un fallback silencioso sin romper la ejecución.
@@ -59,12 +59,13 @@
 - [x] Safeguard: Do not touch animations or particle effects for dash. Leave animation playback to KaiBit23.
 - [x] Non-intrusive cooldown HUD decoupled from `StarterGui` (DashFeedback y visibilidad en Intermission).
 
-### Phase 6: Hunter Classes (Tracker, Stalker, Trapper) [COMPLETED]
+### Phase 6: Hunter Classes and Abilities [COMPLETED]
 - [x] Interactive class selection GUI prompt during `INTERMISSION`.
 - [x] Server-side `HunterClassService`.
-- [x] Class 1 - Tracker: Ability to reveal Runner silhouettes for 4s (25s cooldown).
-- [x] Class 2 - Stalker: Temporary stealth / invisibility with speed boost (20s cooldown).
-- [x] Class 3 - Trapper: Ground freeze trap placement ability (15s cooldown).
+- [x] Class 1 - Tracker: Revela siluetas de Runners durante 4s (25s cooldown).
+- [x] Class 2 - Stalker: Sigilo e invisibilidad temporal con aumento de velocidad (20s cooldown).
+- [x] Class 3 - Trapper: Coloca trampas de congelamiento en el suelo (15s cooldown).
+- [x] Habilidad de Cazador - Pánico / Confusión: Invierte temporalmente los controles de movimiento (WASD invertido) del Runner.
 - [x] CooldownHUD integration displaying active class name and cooldown timer.
 - [x] Manejo de re-selección de Hunter si abandona durante selección en Intermission.
 
@@ -94,7 +95,7 @@
 - [x] Economía dual: `Coins` (monedas para cajas/cosméticos) y `Gems` (gemas para habilidades y progresión).
 - [x] Cuarteto oficial de Gamepasses conectado con IDs reales y renderizado en UI: `VIP` (2025170299), `2× COINS` (2026664283), `2× GEMS` (2025602282) y `2× XP` (2026748305).
 - [x] Catálogo de Developer Products conectado en `MarketplaceService.ProcessReceipt` (`ZeroWheelServer`):
-  - Cajas de armas: `Común` (3717525574), `Rara` (3717525639), `Épica` (3717562012) y `Legendaria` (3717525682).
+  - Cajas de armas/varitas: `Común` (3717525574), `Rara` (3717525639), `Épica` (3717562012) y `Legendaria` (3717525682).
   - Packs de monedas: `1K` (3717562334), `10K` (3717562596) y `100K` (3717562754).
   - Packs de gemas: `100` (3717565388), `200` (3717565549) y `300` (3717565572).
 - [x] 12 iconos oficiales subidos al CDN de Roblox (`rbxassetid://`) y enlazados en `ZeroUI` y `ZeroArmasClient`.
@@ -104,19 +105,56 @@
 - [x] `ShopController`: HUD dual en cliente, actualización de tarjetas de pases y manejo seguro de compras.
 - [x] Comandos de testing: `/addcoins`, `/addgems`, `/simulatepass` y `/clearpasses`.
 
+### Phase 11: Runner Abilities System [COMPLETED]
+- [x] Configuración centralizada de habilidades en `RunnerAbilityConfig` (Catálogo oficial de 10 habilidades de supervivencia):
+  1. `Bloqueo Rápido`: Guardia reactiva de 0.6s que niega impacto de cuchillo y aplica micro-stun de 0.4s al atacante.
+  2. `Bomba de Humo`: Nube densa de 3s que corta visión directa y apaga contorno (outline).
+  3. `Mancha Resbaladiza`: Fluido en suelo que reduce tracción y velocidad del cazador 30% por 1.5s.
+  4. `Super Salto`: Impulso vertical seco para librar alturas y obstáculos.
+  5. `Camuflaje`: Semitransparencia y borrado de outline por 2s (cancelable al saltar o rescatar).
+  6. `Desfibrilador`: Rescate instantáneo sin canalizar barra de 1.5s (limitado a 1 uso por ronda).
+  7. `Señuelo`: Clon visual que corre en línea recta por 3s para desviar la atención.
+  8. `Pulso de Empuje`: Onda frontal de corto alcance que desplaza al cazador hacia atrás.
+  9. `Inyección de Adrenalina`: +20% velocidad por 2.5s tras rescate exitoso o al ser el último corredor vivo.
+  10. `Sobrecarga de Dash`: Doble dash consecutivo con penalización de cooldown posterior (6s a 9-10s).
+- [x] Validación y ejecución autoritativa en `RunnerAbilityService` con chequeo estricto de rol y estado.
+- [x] Integración de cliente con `RunnerAbilityController` y feedback en `CooldownHUD`.
+
+### Phase 12: Responsive Arcade UI & Visual FX [COMPLETED]
+- [x] Rediseño estructural de `ZeroUI` a layout relativo multiplataforma (100% responsivo, sin lienzos rígidos 1600x900).
+- [x] Unificación del cluster de acción inferior derecho (`DashBars`, `CooldownSweep`, slots de habilidad [Q] y [F]/[E]).
+- [x] Header HUD dinámico con medidores de nivel, monedas, gemas, insignias de rol adaptativas y temporizador.
+- [x] Sistema de luces dinámicas de feria y marquesina (`ZeroTimerLuzFX` y `ZeroRuletaLuzFX`) con 7 patrones cíclicos.
+- [x] Micro-interacciones táctiles, animaciones elásticas y hover unificado en modales y drawer.
+
+### Phase 13: Halloween Event 2026 (Spooky Season) [PLANNING]
+- [ ] Documento de especificación oficial: `HALLOWEEN_EVENT_DESIGN.md`.
+- [ ] Moneda única de evento: `Calabazas` (Pumpkins) en pool dinámico continuo (8-12 en mapa, 4-15 valor RNG).
+- [ ] Evento de ronda "Luna Roja": Skybox carmesí, niebla naranja, música tensa y spawn/valor x2.
+- [ ] Ataúd gótico de congelamiento: Animación de tapa azotando, feedback de temblor físico (shake) en rescate y estallido de murciélagos al liberarse.
+- [ ] Habilidades de Cazador de Halloween:
+  - `Lanza de Gransax`: Proyectil relámpago/espectral a distancia en salto.
+  - `Alas Negras`: Embestida frontal cargada (wind-up telegrafiado) con aturdimiento (`Stun` 1.2-1.5s).
+- [ ] Habilidades de Runner de Halloween:
+  - `Lápida de Retorno`: Ancla temporal / recall limitado a 2 usos por ronda.
+  - `Parpadeo Sombrío`: Teletransporte instantáneo no físico en línea recta (12-14 studs) para cruzar rejas y obstáculos.
+- [ ] Caja de Halloween (Única): Varitas y cosméticos con sistema de retorno porcentual por duplicados.
+- [ ] Ruleta de Halloween: Giros diarios gratis por login y giros extra con Calabazas.
+- [ ] Ajustes de controles móviles y opción de Auto-Attack.
+
 ---
 
 ## Directory Conventions
-
+ 
 ### Source Storage & Team Create Workflow
-- **Código Fuente (`src/`)**: Todos los scripts de Luau están exportados en texto plano bajo `src/` (`src/server`, `src/client`, `src/shared`, `src/startergui`, etc.) y sincronizados con GitHub.
-- **Sincronización**: Gestionada mediante la skill `.agents/skills/sync-game-repo` y `tools/sync_server.py`.
+- **Código Centralizado en Studio**: Todo el código de Luau reside directamente dentro del DataModel de Roblox Studio. No se mantienen copias locales en disco (`src/` eliminada).
+- **Flujo de Trabajo Directo**: Las lecturas, modificaciones y pruebas se realizan en tiempo real en la sesión de Team Create a través del servidor MCP de Roblox Studio.
 
 ### DataModel Structure & Responsibilities
 
 ```text
 ReplicatedStorage/
-  |-- Shared/                <-- [ROJO: src/shared] Código compartido (Config, Constants, Network)
+  |-- Shared/                <-- [POLARIS] Código compartido (Config, Constants, Network)
   |-- ZeroUI                 <-- [KAIBIT23] Constructor y estilos visuales UI
   |-- ZeroWheelConfig        <-- [KAIBIT23] Configuración de premios y probabilidades de la ruleta
   |-- ZeroWheelController    <-- [KAIBIT23] Controlador cliente de la ruleta
@@ -127,18 +165,19 @@ ReplicatedStorage/
   `-- ZeroWheelRequest       <-- [KAIBIT23] RemoteFunction para giros de ruleta
 
 ServerScriptService/
-  |-- Server/                <-- [ROJO: src/server] Lógica y servicios del servidor
+  |-- Server/                <-- [POLARIS] Lógica y servicios del servidor
   |-- ZeroSprint             <-- [KAIBIT23] Servidor de sprint (+6 WalkSpeed respetando estados)
   |-- ZeroWheelServer        <-- [KAIBIT23] Servidor de economía y giros con DataStore
   `-- ZeroWheelRules         <-- [KAIBIT23] Reglas de validación y premios de ruleta
 
 StarterPlayerScripts/
-  |-- Client/                <-- [ROJO: src/client] Controladores de cliente y llamadas remotas
+  |-- Client/                <-- [POLARIS] Controladores de cliente y llamadas remotas
   |-- ZeroUIClient           <-- [KAIBIT23] Controlador del HUD, Modales y despacho de acciones
   |-- ZeroMovement           <-- [KAIBIT23] Reproductor procedural R6 (Sprint, LandRoll, Dash)
   |-- ZeroAnimationClient    <-- [KAIBIT23] Enlazador de animaciones R15 y escucha de DashFeedback
   |-- ZeroControls           <-- [KAIBIT23] Manejador de Shift (sprint) y Ctrl (shift-lock)
   |-- ZeroTimerLuzFX         <-- [POLARIS] Luces dinámicas de marquesina en TimerDisplay (7 patrones cíclicos)
+  |-- ZeroRuletaLuzFX        <-- [POLARIS] Luces dinámicas de feria en RuletaNueva (7 patrones cíclicos)
   `-- ZeroSoundClient        <-- [KAIBIT23] Escuchador reactivo de audio (conectado a NetworkEvents)
 
 StarterGui/
