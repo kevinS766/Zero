@@ -1,39 +1,54 @@
-# Modelos 3D para Zero (Roblox)
+# Modelos 3D — Zero (Roblox)
 
-Esta carpeta contiene los modelos 3D listos para animación e importación a Roblox Studio.
+Repositorio centralizado de modelos 3D, assets visuales, armas y cosméticos para **Zero**.
 
-## Contenido
+## Estructura de Sets y Categorías
 
-1. **`Baston_Demoniaco.fbx`**:
-   - Polígonos: **1,282** caras (~2,464 triángulos, optimizado < 2.6k).
-   - Estructura: Asta gótica en espiral, empuñadura de cuero cruzado, collares con púas cónicas, punta de lanza pommel con rubí, jaula con 6 garras que sujetan el orbe central carmesí, alas de murciélago con nervaduras y membranas en Vertex Color.
-   - Diseñado para usarse como Tool / Weapon rígido o animado.
+Para mantener el proyecto limpio y modular a medida que agreguemos más modelos, cada set temático o categoría tiene su propia subcarpeta encapsulada:
 
-2. **`Alas_Y_Cola_Demoniaca.fbx`**:
-   - Polígonos: **874** caras (~1,732 triángulos).
-   - Estructura: Alas principales superiores desplegadas, sub-alas inferiores colgantes a la espalda, y cola demoníaca con punta en forma de pica.
-   - Posicionado a escala exacta de torso/espalda R6 de Roblox.
-   - Listo para colocar esqueleto (Armature) y hacer skinning/pesado de vértices.
-
-3. **`Modelos_Demoniacos_Zero.blend`**:
-   - Escena completa de Blender con materiales PBR configurados, maniquí R6 de referencia en colección separada (`Ref_RobloxAvatar`) y colecciones organizadas (`Baston_Demoniaco` y `Alas_Y_Cola_Demoniaca`).
+```text
+modelos_3d/
+  |-- set_demoniaco/              <-- Set Demoníaco (Bastón, Alas y Cola)
+  |     |-- Baston_Demoniaco.fbx
+  |     |-- Alas_Y_Cola_Demoniaca.fbx
+  |     `-- Modelos_Demoniacos_Zero.blend
+  |
+  |-- [futuros_sets]/             <-- Próximos sets (Halloween, Armas, etc.)
+  `-- README.md
+```
 
 ---
 
-## Cómo descargar solo esta carpeta
+## Catálogo Actual
 
-Si la otra persona no desea clonar todo el repositorio del juego, puede descargar solo esta carpeta mediante cualquiera de estos métodos:
+### 1. `set_demoniaco/`
+- **`Baston_Demoniaco.fbx`**:
+  - Polígonos: **1,282** caras (~2,464 triángulos, límite < 2.6k tris).
+  - Estructura: Asta gótica en espiral, empuñadura con cuero cruzado, collares con púas cónicas, punta de lanza pommel con rubí, jaula con 6 garras que sujetan el orbe central carmesí, alas de murciélago con nervaduras y membranas en Vertex Color.
+  - Rol: Arma / Bastón de Cazador (Tool rígido o animado).
+- **`Alas_Y_Cola_Demoniaca.fbx`**:
+  - Polígonos: **874** caras (~1,732 triángulos).
+  - Estructura: Alas principales superiores desplegadas, sub-alas inferiores colgantes a la espalda, y cola demoníaca con punta en pica.
+  - Proporción: Calzado exacto sobre la espalda/torso R6 de Roblox.
+  - Rol: Accesorio cosmético esquelético (listo para rigging / armature).
+- **`Modelos_Demoniacos_Zero.blend`**:
+  - Archivo maestro de Blender con colecciones separadas, materiales PBR y maniquí R6 de referencia en colección independiente.
 
-### Opción A (Descarga directa desde GitHub - Sin Git)
-1. Entrar a: `https://github.com/kevinS766/Zero/tree/main/modelos_3d`
-2. Hacer clic en cada archivo y darle a **Download raw file**.
+---
 
-### Opción B (Clonado disperso con Git - Sparse Checkout)
-Ejecutar en la terminal de Git:
+## Cómo clonar o descargar solo la carpeta de modelos
+
+Si el modelador o animador no desea clonar el código del juego ni el resto del repositorio:
+
+### Opción A (Descarga directa desde la web)
+Navegar a: `https://github.com/kevinS766/Zero/tree/main/modelos_3d` y descargar la subcarpeta o archivo deseado.
+
+### Opción B (Sparse Checkout con Git)
+Clona solo el árbol de `modelos_3d`:
 ```bash
 git clone --depth 1 --no-checkout https://github.com/kevinS766/Zero.git
 cd Zero
 git sparse-checkout set modelos_3d
 git checkout
 ```
-Esto descargará **únicamente** la carpeta `modelos_3d/` sin descargar scripts ni el resto del proyecto.
+De este modo solo se descargarán los modelos y no el resto del repositorio.
